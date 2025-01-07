@@ -24,6 +24,23 @@ Model checkpoints are available on [HuggingFace](https://huggingface.co/collecti
 
 ## Benckmark Results & Released Models
 
+- $\small \textsf{AE2 (LC) - AlpacaEval 2 length control win rate}$
+- $\small \textsf{AH - Arena-Hard win rate }$
+- $\small \textsf{MT - average MT-Bench scores for two dialogue turns}$
+- $\small \textsf{The judge model is GPT-4o}$
+
+| Models                            |  AE2 (LC)  |  AH   |  MT   |                                                                                                                              |
+|-----------------------------------|:----------:|:-----:|:-----:|------------------------------------------------------------------------------------------------------------------------------|
+| Segment PPO Phi-3-mini Instruct   |   31.05    | 34.0  | 7.65  | [yyqoni/Phi-3-mini-4k-segment-ppo-60k](https://huggingface.co/yyqoni/Phi-3-mini-4k-segment-ppo-60k)                          |
+| Token PPO Phi-3-mini Instruct     |   27.82    | 27.2  | 7.58  | [yyqoni/Phi-3-mini-4k-token-ppo-60k](https://huggingface.co/yyqoni/Phi-3-mini-4k-token-ppo-60k)                              |
+| Bandit PPO Phi-3-mini Instruct    |   27.05    | 31.3  | 7.46  | [yyqoni/Phi-3-mini-4k-bandit-ppo-60k](https://huggingface.co/yyqoni/Phi-3-mini-4k-bandit-ppo-60k)                            |
+| Segment PPO Llama-3.1 Instruct 8B |   40.97    | 49.7  | 8.03  | [yyqoni/meta-llama-3.1-instruct-8b-segment-ppo-60k](https://huggingface.co/yyqoni/meta-llama-3.1-instruct-8b-segment-ppo-60k) |
+| Token PPO Llama-3.1 Instruct 8B   |   45.81    | 49.3  | 7.93  | [yyqoni/meta-llama-3.1-instruct-8b-token-ppo-60k](https://huggingface.co/yyqoni/meta-llama-3.1-instruct-8b-token-ppo-60k)    |
+| Bandit PPO Llama-3.1 Instruct 8B  |   40.77    | 36.6  | 7.76  | [yyqoni/meta-llama-3.1-instruct-8b-bandit-ppo-60k](https://huggingface.co/yyqoni/meta-llama-3.1-instruct-8b-bandit-ppo-60k)  |
+| Segment PPO Llama-3 SFT 8B        |   25.11    | 30.4  | 7.15  | [yyqoni/rlhflow-llama-3-sft-8b-v2-segment-ppo-60k](https://huggingface.co/yyqoni/rlhflow-llama-3-sft-8b-v2-segment-ppo-60k)  |
+| Token PPO Llama-3 SFT 8B          |   23.84    | 26.0  | 7.13  | [yyqoni/rlhflow-llama-3-sft-8b-v2-token-ppo-60k](https://huggingface.co/yyqoni/rlhflow-llama-3-sft-8b-v2-token-ppo-60k)      |
+| Bandit PPO Llama-3 SFT 8B         |   21.20    | 18.7  | 7.11  | [yyqoni/rlhflow-llama-3-sft-8b-v2-bandit-ppo-60k](https://huggingface.co/yyqoni/rlhflow-llama-3-sft-8b-v2-bandit-ppo-60k)    |
+
 
 ## Dependency
 The dependencies for running our repo can be installed by:
@@ -38,7 +55,7 @@ pip install -e .
 
 ### Segment-level RLHF PPO
 
-* Backbone Model 1 (Phi-3-mini-instruct-segment):
+* Phi-3-mini Instruct:
 ```shell
 # first train reward model
 bash examples/scripts/train_seg_rm.sh train_seg_rm phi3-instruct preference_700K 1 peak 1.75 avg 
@@ -47,17 +64,7 @@ bash examples/scripts/train_seg_rm.sh train_seg_rm phi3-instruct preference_700K
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training phi3-instruct Ultrafeedback 2 peak 1.75 avg segment_normalization 0.25 preference700k_60000
 ```
 
-* Backbone Model 2 (rlhflow-llama-v2-segment):
-```shell
-# first train reward model
-bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 preference_700K 1 peak 2 avg
-
-# then train ppo
-bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 2 avg segment_normalization 0.25 preference700k_60000
-
-```
-
-* Backbone Model 3 (meta-llama-3.1-segment):
+* Llama-3.1 Instruct 8B:
 ```shell
 # first train reward model
 bash examples/scripts/train_seg_rm.sh train_seg_rm meta_llama_3_1_instruct_8b preference_700K 1 peak 2 avg
@@ -66,9 +73,21 @@ bash examples/scripts/train_seg_rm.sh train_seg_rm meta_llama_3_1_instruct_8b pr
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training_end_penalty_m0d05_len_thres_800 meta_llama_3_1_instruct_8b Ultrafeedback 1 peak 2 avg segment_normalization 0.25 preference700k_60000
 ```
 
+* Llama-3 SFT 8B (`rlhflow-llama-3-sft-8b-v2`):
+
+```shell
+# first train reward model
+bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 preference_700K 1 peak 2 avg
+
+# then train ppo
+bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 2 avg segment_normalization 0.25 preference700k_60000
+```
+
+
+
 ### Token-level RLHF PPO
 
-* Backbone Model 1 (Phi-3-mini-instruct-token):
+* Phi-3-mini Instruct:
 ```shell
 # first train reward model
 bash examples/scripts/train_seg_rm.sh train_seg_rm phi3-instruct preference_700K 1 peak 0 avg 
@@ -77,16 +96,7 @@ bash examples/scripts/train_seg_rm.sh train_seg_rm phi3-instruct preference_700K
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training phi3-instruct Ultrafeedback 2 peak 0 avg segment_normalization 0.25 preference700k_60000
 ```
 
-* Backbone Model 2 (rlhflow-llama-v2-token):
-```shell
-# first train reward model
-bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 preference_700K 1 peak 0 avg
-
-# then train ppo
-bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training_length_norm rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 0 avg segment_normalization 0.25 preference700k_60000
-```
-
-* Backbone Model 3 (meta-llama-3.1-token):
+* Llama-3.1 Instruct 8B:
 ```shell
 # first train reward model
 bash examples/scripts/train_seg_rm.sh train_seg_rm meta_llama_3_1_instruct_8b preference_700K 1 peak 0 avg
@@ -95,29 +105,29 @@ bash examples/scripts/train_seg_rm.sh train_seg_rm meta_llama_3_1_instruct_8b pr
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training meta_llama_3_1_instruct_8b Ultrafeedback 1 peak 0 avg segment_normalization 0.25 preference700k_60000
 ```
 
+* Llama-3 SFT 8B (`rlhflow-llama-3-sft-8b-v2`):
+```shell
+# first train reward model
+bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 preference_700K 1 peak 0 avg
+
+# then train ppo
+bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training_length_norm rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 0 avg segment_normalization 0.25 preference700k_60000
+```
+
+
+
 ### Bandit RLHF PPO (Baseline)
 
-* Backbone Model 1 (Phi-3-mini-instruct-bandit):
+* Phi-3-mini Instruct:
 ```shell
 # first train reward model
 bash examples/scripts/train_seg_rm.sh train_seg_rm phi3-instruct preference_700K 1 peak 1000 avg 
 
 # then train ppo
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training phi3-instruct Ultrafeedback 2 peak 1000 avg segment_last_avg 0.2 preference700k_60000
-
 ```
 
-* Backbone Model 2 (rlhflow-llama-v2-bandit):
-```shell
-# first train reward model
-
-bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 preference_700K 1 peak 1000 avg
-
-# then train ppo
-bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 1000 avg segment_last_avg 0.2 preference700k_60000
-```
-
-* Backbone Model 3 (meta-llama-3.1-bandit):
+* Llama-3.1 Instruct 8B:
 ```shell
 # first train reward model
 bash examples/scripts/train_seg_rm.sh train_seg_rm meta_llama_3_1_instruct_8b preference_700K 1 peak 1000 avg
@@ -125,6 +135,18 @@ bash examples/scripts/train_seg_rm.sh train_seg_rm meta_llama_3_1_instruct_8b pr
 # then train ppo
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training meta_llama_3_1_instruct_8b Ultrafeedback 1 peak 1000 avg segment_last_avg 0.2 preference700k_60000
 ```
+
+
+* Llama-3 SFT 8B (`rlhflow-llama-3-sft-8b-v2`):
+```shell
+# first train reward model
+bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 preference_700K 1 peak 1000 avg
+
+# then train ppo
+bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 1000 avg segment_last_avg 0.2 preference700k_60000
+```
+
+
 
 ## Evaluation
 
