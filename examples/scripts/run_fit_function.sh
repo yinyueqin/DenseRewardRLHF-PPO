@@ -1,10 +1,7 @@
-# bash examples/scripts/run_fit_function.sh model_path peak 1.75 avg calc
-
 model=${1}
 segment_method=${2}
 entropy_threshold=${3}
 agg_func=${4}
-mode=${5}
 
 echo "model: ${model}"
 echo "segment_method: ${segment_method}"
@@ -17,10 +14,12 @@ huggingface-cli login --token $HF_TOKEN
 
 batch_size=8
 
-if [[ "${model}" == *"phi3-instruct"* ]]; then
+if [[ "${model}" == *"Phi"* ]]; then
     ref_model_id="microsoft/Phi-3-mini-4k-instruct"
-elif [[ "${model}" == *"llama_3_sft_8b_v2"* ]]; then
+elif [[ "${model}" == *"llama"* && "${model}" == *"sft"* ]]; then
     ref_model_id="RLHFlow/LLaMA3-SFT-v2"
+elif [[ "${model}" == *"llama"* && "${model}" == *"meta"* ]]; then
+    ref_model_id="meta-llama/Llama-3.1-8B-Instruct"
 fi
 
 echo "model id: ${model}"

@@ -1,6 +1,6 @@
 # 🔥 Denser Reward for RLHF PPO Training 🔥
 
-This repository contains the code and released models for our paper [Segmenting Text and Learning Their Rewards for Improved RLHF in Language Model](urlXXXXXXXXXXXX).
+This repository contains the code and released models for our paper [Segmenting Text and Learning Their Rewards for Improved RLHF in Language Model](https://arxiv.org/abs/2501.02790).
 We study the granularity of action space in RLHF PPO training, assuming only binary preference labels.
 Our proposal is to ${\color{lightgreen} \textsf{assign reward to each semantically complete text segment}}$, rather than [per-token](https://arxiv.org/pdf/2306.00398) (maybe over-granular 😭) or bandit reward (sparse 😭).
 We further ${\color{lightgreen} \textsf{design techniques to ensure the }}$ ${\color{lightgreen} \textsf{effectiveness and stability of RLHF PPO training under the denser \\{segment-level, token-level\\} rewards}}$. 
@@ -146,6 +146,16 @@ bash examples/scripts/train_seg_rm.sh train_seg_rm rlhflow_llama_3_sft_8b_v2 pre
 bash examples/scripts/train_ppo_segment.sh ppo_segment_rm_training rlhflow_llama_3_sft_8b_v2 Ultrafeedback 1 peak 1000 avg segment_last_avg 0.2 preference700k_60000
 ```
 
+## Linear Function Fitting
+```shell
+bash examples/scripts/run_fit_function.sh yyqoni/Phi-3-mini-4k-instruct-segment-rm-700k peak 1.75 avg
+
+bash examples/scripts/run_fit_function.sh yyqoni/rlhflow-llama-3-sft-8b-v2-segment-rm-700k peak 2 avg
+
+bash examples/scripts/run_fit_function.sh yyqoni/meta-llama-3.1-instruct-8b-segment-rm-700k peak 2 avg
+```
+
+After calculating the parameters of the linear function using the script above, we can update the corresponding entries in `param.json` located in [`denserlhf/trainer/ppo_utils/param.json`](denserlhf/trainer/ppo_utils/param.json).
 
 
 ## Evaluation
